@@ -1,8 +1,7 @@
 <template>
   <div class="section">
     <h2>{{ title }}</h2>
-    <div class="title_wrap"><label for="ipTitle">제목</label> <input id="ipTitle" type="text" v-model="itemTitle"></div><br />
-    <div class="content_wrap"><label for="ipContent">내용</label> <input id="ipContent" type="text" v-model="itemContent"></div><br />
+    <div class="content_wrap"><label for="ipContent">내용</label> <input id="ipContent" type="text" v-model="todo.content"></div><br />
     <button @click="editAndGo()">저장</button>
   </div>
 </template>
@@ -15,27 +14,21 @@ export default {
   data () {
     return {
       title: 'Edit',
-      itemTitle: '',
-      itemContent: '',
-      itemIdx: -1
+      todo: null
     }
   },
   created () {
-    this.initModel()
     this.initPage()
   },
   methods: {
     ...mapActions(['editModel', 'initModel']),
     initPage () {
       console.log('this.$route.query.idx', this.$route.query.idx)
-      var obj = this.$store.state.model.list.find(item => item.idx === parseInt(this.$route.query.idx, 10))
-      console.log('obj', obj)
-      this.itemTitle = obj.title
-      this.itemContent = obj.content
-      this.itemIdx = obj.idx
+      this.todo = this.$store.state.model.editItem
+      console.log('todo', this.todo)
     },
     editAndGo () {
-      this.editModel({'title': this.itemTitle, 'content': this.itemContent, 'idx': this.itemIdx})
+      this.editModel({'todo': this.todo, 'content': this.itemContent})
       this.$router.replace('/')
     }
   }
